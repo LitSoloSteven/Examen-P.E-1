@@ -1,58 +1,71 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
-public class Calculadora
+public class NotasEstudiantes
 {
-    public double ultimoResultado;
+    private List<double> notas = new List<double>();
 
-    public double Suma(double a, double b)
+    public double ObtenerNotaValidada()
     {
-        ultimoResultado = a + b;
-        return ultimoResultado;
-    }
+        double nota;
+        bool esNumeroValido = false;
 
-    public double Resta(double a, double b)
-    {
-        ultimoResultado = a - b;
-        return ultimoResultado;
-    }
-
-    public double Multiplicacion(double a, double b)
-    {
-        ultimoResultado = a * b;
-        return ultimoResultado;
-    }
-
-    public double Division(double a, double b)
-    {
-        if (b == 0)
+        while (!esNumeroValido)
         {
-            Console.WriteLine("Error: No se puede dividir por cero.");
-            return double.NaN;
+            Console.Write("Por favor, introduce una nota (0-100): ");
+            string entrada = Console.ReadLine();
+
+            esNumeroValido = double.TryParse(entrada, out nota);
+
+            if (esNumeroValido && (nota < 0 || nota > 100))
+            {
+                Console.WriteLine("La nota debe estar entre 0 y 100. Por favor, intentalo de nuevo.");
+                esNumeroValido = false;
+            }
+            else if (!esNumeroValido)
+            {
+                Console.WriteLine("Entrada no valida. Por favor, introduce un numero.");
+            }
         }
-        ultimoResultado = a / b;
-        return ultimoResultado;
+        return nota;
     }
 
-    public double Potencia(double baseNum, double exponente)
+    public void AgregarNota(double nota)
     {
-        ultimoResultado = Math.Pow(baseNum, exponente);
-        return ultimoResultado;
+        notas.Add(nota);
+        Console.WriteLine($"Nota de {nota} agregada con exito.");
     }
-
-    public double RaizCuadrada(double num)
+    
+    public double CalcularPromedio()
     {
-        if (num < 0)
+        if (notas.Count == 0)
         {
-            Console.WriteLine("Error: No se puede calcular la raíz de un número negativo.");
-            return double.NaN;
+            Console.WriteLine("No hay notas para calcular el promedio.");
+            return 0;
         }
-        ultimoResultado = Math.Sqrt(num);
-        return ultimoResultado;
-    }
 
-    public double MostrarUltimoResultado()
+        double sumaNotas = 0;
+        foreach (double n in notas)
+        {
+            sumaNotas += n;
+        }
+        return sumaNotas / notas.Count;
+    }
+    
+    public void MostrarExtremos()
     {
-        return ultimoResultado;
+        if (notas.Count == 0)
+        {
+            Console.WriteLine("No hay notas para mostrar.");
+            return;
+        }
+
+        double notaMasAlta = notas.Max();
+        double notaMasBaja = notas.Min();
+
+        Console.WriteLine($"La nota mas alta es: {notaMasAlta}");
+        Console.WriteLine($"La nota mas baja es: {notaMasBaja}");
     }
 }
 
@@ -60,19 +73,20 @@ class Program
 {
     static void Main(string[] args)
     {
-        Calculadora miCalculadora = new Calculadora();
+        NotasEstudiantes miGestion = new NotasEstudiantes();
 
-        double resultadoSuma = miCalculadora.Suma(10, 5);
-        Console.WriteLine($"El resultado de la suma es: {resultadoSuma}");
-        Console.WriteLine($"El último resultado guardado es: {miCalculadora.MostrarUltimoResultado()}");
+        Console.WriteLine("Vamos a agregar 3 notas.");
+        for (int i = 0; i < 3; i++)
+        {
+            double notaValida = miGestion.ObtenerNotaValidada();
+            miGestion.AgregarNota(notaValida);
+        }
 
-        double resultadoMultiplicacion = miCalculadora.Multiplicacion(resultadoSuma, 2);
-        Console.WriteLine($"El resultado de la multiplicación es: {resultadoMultiplicacion}");
-        Console.WriteLine($"El último resultado guardado es: {miCalculadora.MostrarUltimoResultado()}");
-
-        double resultadoRaiz = miCalculadora.RaizCuadrada(25);
-        Console.WriteLine($"El resultado de la raíz cuadrada es: {resultadoRaiz}");
-        Console.WriteLine($"El último resultado guardado es: {miCalculadora.MostrarUltimoResultado()}");
+        Console.WriteLine("\n--- Resultados ---");
+        double promedioActual = miGestion.CalcularPromedio();
+        Console.WriteLine($"El promedio de las notas es: {promedioActual:F2}");
+        
+        miGestion.MostrarExtremos();
 
         Console.ReadKey();
     }
