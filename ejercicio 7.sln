@@ -2,57 +2,67 @@ using System;
 
 class Program
 {
-    // Variable global: guarda los intentos del jugador
-    static int intentos = 0; 
-
     static void Main()
     {
-        Random rnd = new Random(); // sirve para generar un número al azar
-        int numeroSecreto = rnd.Next(1, 101); // número secreto entre 1 y 100
-        bool adivinado = false; // controla si ya se acertó
+        // Llamamos al método que calcula el promedio
+        CalcularPromedio();
+    }
 
-        Console.WriteLine("Juego: Adivina el número (1 al 100)");
+    // Método para calcular el promedio de 3 notas
+    static void CalcularPromedio()
+    {
+        // Variables locales (solo sirven aquí dentro)
+        double nota1, nota2, nota3, promedio;
 
-        while (!adivinado) // se repite hasta que adivine
+        Console.WriteLine("Calcular promedio de 3 notas (0 a 100)");
+
+        // Pedir primera nota con validación
+        Console.Write("Escribe la primera nota: ");
+        nota1 = LeerNota();
+
+        // Pedir segunda nota con validación
+        Console.Write("Escribe la segunda nota: ");
+        nota2 = LeerNota();
+
+        // Pedir tercera nota con validación
+        Console.Write("Escribe la tercera nota: ");
+        nota3 = LeerNota();
+
+        // Sacar el promedio
+        promedio = (nota1 + nota2 + nota3) / 3;
+
+        // Mostrar resultado
+        Console.WriteLine($"El promedio es: {promedio}");
+    }
+
+    // Método para leer una nota válida
+    static double LeerNota()
+    {
+        double nota;
+
+        // Bucle hasta que la nota sea válida
+        while (true)
         {
-            Console.Write("Escribe tu intento: ");
-            string entrada = Console.ReadLine(); // lo que escribe el jugador
+            string entrada = Console.ReadLine();
 
-            int numeroUsuario;
-
-            // Validar si realmente es un número
-            if (!int.TryParse(entrada, out numeroUsuario))
+            // Validar si es número
+            if (!double.TryParse(entrada, out nota))
             {
-                Console.WriteLine("Error: solo puedes escribir números.");
-                continue; // vuelve a pedir
+                Console.Write("Error: escribe un número válido: ");
+                continue;
             }
 
-            // Validar que el número esté entre 1 y 100
-            if (numeroUsuario < 1 || numeroUsuario > 100)
+            // Validar rango entre 0 y 100
+            if (nota < 0 || nota > 100)
             {
-                Console.WriteLine("Error: el número debe estar entre 1 y 100.");
-                continue; 
+                Console.Write("Error: la nota debe estar entre 0 y 100: ");
+                continue;
             }
 
-            intentos++; // sumamos cada intento
-            Console.WriteLine($"Intento #{intentos}: escribiste {numeroUsuario}");
-
-            // Comparar con el secreto
-            if (numeroUsuario == numeroSecreto)
-            {
-                Console.WriteLine($"¡Ganaste! Lo lograste en {intentos} intentos.");
-                adivinado = true; // termina el juego
-            }
-            else if (numeroUsuario < numeroSecreto)
-            {
-                Console.WriteLine("El número secreto es más grande.");
-            }
-            else
-            {
-                Console.WriteLine("El número secreto es más pequeño.");
-            }
+            // Si todo está bien, salimos del ciclo
+            break;
         }
 
-        Console.WriteLine("Fin del juego.");
+        return nota;
     }
 }
