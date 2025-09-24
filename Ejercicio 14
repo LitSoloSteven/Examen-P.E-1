@@ -1,0 +1,79 @@
+using System;
+
+public class Calculadora
+{
+    public double ultimoResultado;
+
+    public double Suma(double a, double b)
+    {
+        ultimoResultado = a + b;
+        return ultimoResultado;
+    }
+
+    public double Resta(double a, double b)
+    {
+        ultimoResultado = a - b;
+        return ultimoResultado;
+    }
+
+    public double Multiplicacion(double a, double b)
+    {
+        ultimoResultado = a * b;
+        return ultimoResultado;
+    }
+
+    public double Division(double a, double b)
+    {
+        if (b == 0)
+        {
+            Console.WriteLine("Error: No se puede dividir por cero.");
+            return double.NaN;
+        }
+        ultimoResultado = a / b;
+        return ultimoResultado;
+    }
+
+    public double Potencia(double baseNum, double exponente)
+    {
+        ultimoResultado = Math.Pow(baseNum, exponente);
+        return ultimoResultado;
+    }
+
+    public double RaizCuadrada(double num)
+    {
+        if (num < 0)
+        {
+            Console.WriteLine("Error: No se puede calcular la raíz de un número negativo.");
+            return double.NaN;
+        }
+        ultimoResultado = Math.Sqrt(num);
+        return ultimoResultado;
+    }
+
+    public double MostrarUltimoResultado()
+    {
+        return ultimoResultado;
+    }
+}
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        Calculadora miCalculadora = new Calculadora();
+
+        double resultadoSuma = miCalculadora.Suma(10, 5);
+        Console.WriteLine($"El resultado de la suma es: {resultadoSuma}");
+        Console.WriteLine($"El último resultado guardado es: {miCalculadora.MostrarUltimoResultado()}");
+
+        double resultadoMultiplicacion = miCalculadora.Multiplicacion(resultadoSuma, 2);
+        Console.WriteLine($"El resultado de la multiplicación es: {resultadoMultiplicacion}");
+        Console.WriteLine($"El último resultado guardado es: {miCalculadora.MostrarUltimoResultado()}");
+
+        double resultadoRaiz = miCalculadora.RaizCuadrada(25);
+        Console.WriteLine($"El resultado de la raíz cuadrada es: {resultadoRaiz}");
+        Console.WriteLine($"El último resultado guardado es: {miCalculadora.MostrarUltimoResultado()}");
+
+        Console.ReadKey();
+    }
+}
