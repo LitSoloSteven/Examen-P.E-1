@@ -8,27 +8,29 @@ public class NotasEstudiantes
 
     public double ObtenerNotaValidada()
     {
-        double nota;
-        bool esNumeroValido = false;
+        double nota; // Aquí la variable está declarada pero sin valor.
 
-        while (!esNumeroValido)
+        while (true)
         {
             Console.Write("Por favor, introduce una nota (0-100): ");
             string entrada = Console.ReadLine();
 
-            esNumeroValido = double.TryParse(entrada, out nota);
-
-            if (esNumeroValido && (nota < 0 || nota > 100))
+            if (double.TryParse(entrada, out nota))
             {
-                Console.WriteLine("La nota debe estar entre 0 y 100. Por favor, intentalo de nuevo.");
-                esNumeroValido = false;
+                if (nota >= 0 && nota <= 100)
+                {
+                    return nota; // Retorna el valor y sale del metodo
+                }
+                else
+                {
+                    Console.WriteLine("La nota debe estar entre 0 y 100. Por favor, intentalo de nuevo.");
+                }
             }
-            else if (!esNumeroValido)
+            else
             {
                 Console.WriteLine("Entrada no valida. Por favor, introduce un numero.");
             }
         }
-        return nota;
     }
 
     public void AgregarNota(double nota)
