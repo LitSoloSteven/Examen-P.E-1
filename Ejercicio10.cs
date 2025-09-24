@@ -7,7 +7,7 @@ class Program
 
     static void Main()
     {
-        Console.WriteLine("=== Juego de puntuación ===");
+        Console.WriteLine(" Juego de puntuación ");
 
         string opcion;
         do
@@ -41,3 +41,4 @@ class Program
         Console.WriteLine($"Tu puntuación es: {puntuacion}");
     }
 }
+
