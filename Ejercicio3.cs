@@ -1,5 +1,4 @@
 ﻿using System;
-
 class Program
 {
     // Variable global que indica la escala de conversión
@@ -40,15 +39,35 @@ class Program
     {
         double temperatura;
 
+        // Definir rangos según escala
+        double minTemp, maxTemp;
+        if (escala == "C")
+        {
+            minTemp = -273.15; //  límite mínimo
+            maxTemp = 1.417e32;  // Límite superior
+        }
+        else
+        {
+            minTemp = 1.8*(-273.15); // Equivalente en °F
+            maxTemp = 1.417e32*(9/5)+32;  // Equivalente en °F
+        }
+
         // Pedir la temperatura con validación
         while (true)
         {
-            Console.Write("Ingresa la temperatura a convertir: ");
+            Console.Write($"Ingresa la temperatura a convertir ({minTemp:F2} a {maxTemp:F2}): ");
             string entrada = Console.ReadLine()??"";
 
             if (double.TryParse(entrada, out temperatura))
             {
-                break;
+                if (temperatura >= minTemp && temperatura <= maxTemp)
+                {
+                    break; // Entrada válida
+                }
+                else
+                {
+                    Console.WriteLine($"Por favor ingresa un número dentro del rango {minTemp:F2} a {maxTemp:F2}.");
+                }
             }
             else
             {
@@ -62,12 +81,12 @@ class Program
         if (escala == "C")
         {
             resultado = (temperatura * 9 / 5) + 32;
-            Console.WriteLine($"{temperatura}°C = {resultado}°F");
+            Console.WriteLine($"{temperatura}°C = {resultado:F2}°F");
         }
         else if (escala == "F")
         {
             resultado = (temperatura - 32) * 5 / 9;
-            Console.WriteLine($"{temperatura}°F = {resultado}°C");
+            Console.WriteLine($"{temperatura}°F = {resultado:F2}°C");
         }
     }
 }
