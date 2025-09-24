@@ -1,25 +1,58 @@
-﻿
-Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.14.36414.22 d17.14
-MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ejercicio 7", "ejercicio 7\ejercicio 7.csproj", "{48A80593-5201-4A7B-9FBB-6A7431BD8877}"
-EndProject
-Global
-	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|Any CPU = Debug|Any CPU
-		Release|Any CPU = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{48A80593-5201-4A7B-9FBB-6A7431BD8877}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{48A80593-5201-4A7B-9FBB-6A7431BD8877}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{48A80593-5201-4A7B-9FBB-6A7431BD8877}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{48A80593-5201-4A7B-9FBB-6A7431BD8877}.Release|Any CPU.Build.0 = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {2889BBC1-220B-4CFA-8486-538E57AD7DA2}
-	EndGlobalSection
-EndGlobal
+using System;
+
+class Program
+{
+    // Variable global: guarda los intentos del jugador
+    static int intentos = 0; 
+
+    static void Main()
+    {
+        Random rnd = new Random(); // sirve para generar un número al azar
+        int numeroSecreto = rnd.Next(1, 101); // número secreto entre 1 y 100
+        bool adivinado = false; // controla si ya se acertó
+
+        Console.WriteLine("Juego: Adivina el número (1 al 100)");
+
+        while (!adivinado) // se repite hasta que adivine
+        {
+            Console.Write("Escribe tu intento: ");
+            string entrada = Console.ReadLine(); // lo que escribe el jugador
+
+            int numeroUsuario;
+
+            // Validar si realmente es un número
+            if (!int.TryParse(entrada, out numeroUsuario))
+            {
+                Console.WriteLine("Error: solo puedes escribir números.");
+                continue; // vuelve a pedir
+            }
+
+            // Validar que el número esté entre 1 y 100
+            if (numeroUsuario < 1 || numeroUsuario > 100)
+            {
+                Console.WriteLine("Error: el número debe estar entre 1 y 100.");
+                continue; 
+            }
+
+            intentos++; // sumamos cada intento
+            Console.WriteLine($"Intento #{intentos}: escribiste {numeroUsuario}");
+
+            // Comparar con el secreto
+            if (numeroUsuario == numeroSecreto)
+            {
+                Console.WriteLine($"¡Ganaste! Lo lograste en {intentos} intentos.");
+                adivinado = true; // termina el juego
+            }
+            else if (numeroUsuario < numeroSecreto)
+            {
+                Console.WriteLine("El número secreto es más grande.");
+            }
+            else
+            {
+                Console.WriteLine("El número secreto es más pequeño.");
+            }
+        }
+
+        Console.WriteLine("Fin del juego.");
+    }
+}
