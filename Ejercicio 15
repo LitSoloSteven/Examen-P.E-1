@@ -1,0 +1,142 @@
+using System;
+
+class CalculadoraCientifica
+{
+    static double ultimoResultado = 0;
+
+    static void Sumar(double a, double b)
+    {
+        double resultado = a + b;
+        ultimoResultado = resultado;
+        Console.WriteLine($"Resultado de la suma: {resultado}");
+    }
+
+    static void Restar(double a, double b)
+    {
+        double resultado = a - b;
+        ultimoResultado = resultado;
+        Console.WriteLine($"Resultado de la resta: {resultado}");
+    }
+
+    static void Multiplicar(double a, double b)
+    {
+        double resultado = a * b;
+        ultimoResultado = resultado;
+        Console.WriteLine($"Resultado de la multiplicación: {resultado}");
+    }
+
+    static void Dividir(double a, double b)
+    {
+        if (b != 0)
+        {
+            double resultado = a / b;
+            ultimoResultado = resultado;
+            Console.WriteLine($"Resultado de la división: {resultado}");
+        }
+        else
+        {
+            Console.WriteLine("Error: División entre cero.");
+        }
+    }
+    static void Potencia(double baseNum, double exponente)
+    {
+        double resultado = Math.Pow(baseNum, exponente);
+        ultimoResultado = resultado;
+        Console.WriteLine($"Resultado de la potencia: {resultado}");
+    }
+    static void RaizCuadrada(double numero)
+    {
+        if (numero >= 0)
+        {
+            double resultado = Math.Sqrt(numero);
+            ultimoResultado = resultado;
+            Console.WriteLine($"Resultado de la raíz cuadrada: {resultado}");
+        }
+        else
+        {
+            Console.WriteLine("Error: No se puede calcular la raíz de un número negativo.");
+        }
+    }
+
+    static void Main(string[] args)
+    {
+        int opcion;
+        do
+        {
+            Console.WriteLine("\n--- CALCULADORA CIENTÍFICA ---");
+            Console.WriteLine("1. Suma");
+            Console.WriteLine("2. Resta");
+            Console.WriteLine("3. Multiplicación");
+            Console.WriteLine("4. División");
+            Console.WriteLine("5. Potencia");
+            Console.WriteLine("6. Raíz cuadrada");
+            Console.WriteLine("7. Mostrar último resultado");
+            Console.WriteLine("0. Salir");
+            Console.Write("Elige una opción: ");
+
+            opcion = int.Parse(Console.ReadLine());
+
+            switch (opcion)
+            {
+                case 1:
+                    Console.Write("Ingresa el primer número: ");
+                    double a1 = double.Parse(Console.ReadLine());
+                    Console.Write("Ingresa el segundo número: ");
+                    double b1 = double.Parse(Console.ReadLine());
+                    Sumar(a1, b1);
+                    break;
+
+                case 2:
+                    Console.Write("Ingresa el primer número: ");
+                    double a2 = double.Parse(Console.ReadLine());
+                    Console.Write("Ingresa el segundo número: ");
+                    double b2 = double.Parse(Console.ReadLine());
+                    Restar(a2, b2);
+                    break;
+
+                case 3:
+                    Console.Write("Ingresa el primer número: ");
+                    double a3 = double.Parse(Console.ReadLine());
+                    Console.Write("Ingresa el segundo número: ");
+                    double b3 = double.Parse(Console.ReadLine());
+                    Multiplicar(a3, b3);
+                    break;
+
+                case 4:
+                    Console.Write("Ingresa el primer número: ");
+                    double a4 = double.Parse(Console.ReadLine());
+                    Console.Write("Ingresa el segundo número: ");
+                    double b4 = double.Parse(Console.ReadLine());
+                    Dividir(a4, b4);
+                    break;
+
+                case 5:
+                    Console.Write("Ingresa la base: ");
+                    double baseNum = double.Parse(Console.ReadLine());
+                    Console.Write("Ingresa el exponente: ");
+                    double exponente = double.Parse(Console.ReadLine());
+                    Potencia(baseNum, exponente);
+                    break;
+
+                case 6:
+                    Console.Write("Ingresa el número: ");
+                    double num = double.Parse(Console.ReadLine());
+                    RaizCuadrada(num);
+                    break;
+
+                case 7:
+                    Console.WriteLine($"Último resultado almacenado: {ultimoResultado}");
+                    break;
+
+                case 0:
+                    Console.WriteLine("Saliendo de la calculadora...");
+                    break;
+
+                default:
+                    Console.WriteLine("Opción inválida. Intenta de nuevo.");
+                    break;
+            }
+
+        } while (opcion != 0);
+    }
+}
