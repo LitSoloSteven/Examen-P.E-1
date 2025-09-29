@@ -1,0 +1,67 @@
+using System;
+
+class Program
+{
+    static void Main()
+    {
+        // Mensaje inicial
+        Console.WriteLine("Sistema de Notas (Versión con nombres) ");
+
+        int cantidadEstudiantes;
+
+        // --- Validar cantidad de estudiantes ---
+        do
+        {
+            Console.Write("¿Cuántos estudiantes desea registrar? ");
+        } while (!int.TryParse(Console.ReadLine(), out cantidadEstudiantes) || cantidadEstudiantes <= 0);
+
+        // --- Vector para guardar los nombres ---
+        string[] nombresEstudiantes = new string[cantidadEstudiantes];
+
+        // --- Matriz para guardar las 3 notas de cada estudiante ---
+        double[,] matrizNotas = new double[cantidadEstudiantes, 3];
+
+        // --- Pedir nombre y notas de cada estudiante ---
+        for (int indiceEstudiante = 0; indiceEstudiante < cantidadEstudiantes; indiceEstudiante++)
+        {
+            // Guardamos el nombre en el vector
+            Console.Write($"\nIngrese el nombre del estudiante #{indiceEstudiante + 1}: ");
+            nombresEstudiantes[indiceEstudiante] = Console.ReadLine();
+
+            // Pedimos sus 3 notas
+            for (int indiceNota = 0; indiceNota < 3; indiceNota++)
+            {
+                double nota;
+                do
+                {
+                    Console.Write($"Ingrese la nota del corte {indiceNota + 1} (0-100): ");
+                } while (!double.TryParse(Console.ReadLine(), out nota) || nota < 0 || nota > 100);
+
+                // Guardamos la nota en la matriz
+                matrizNotas[indiceEstudiante, indiceNota] = nota;
+            }
+        }
+
+        // --- Mostrar resultados finales ---
+        Console.WriteLine("\n Resultados Finales ");
+        for (int indiceEstudiante = 0; indiceEstudiante < cantidadEstudiantes; indiceEstudiante++)
+        {
+            double sumaNotas = 0;
+
+            // Mostrar nombre y notas del estudiante
+            Console.Write($"{nombresEstudiantes[indiceEstudiante]} - Notas: ");
+
+            for (int indiceNota = 0; indiceNota < 3; indiceNota++)
+            {
+                Console.Write(matrizNotas[indiceEstudiante, indiceNota] + " ");
+                sumaNotas += matrizNotas[indiceEstudiante, indiceNota]; // Vamos sumando
+            }
+
+            // Calculamos promedio
+            double promedioFinal = sumaNotas / 3;
+            Console.WriteLine($"| Promedio: {promedioFinal:F2}");
+        }
+
+        Console.WriteLine("\n Programa Finalizado ");
+    }
+}
