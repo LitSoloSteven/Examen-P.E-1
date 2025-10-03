@@ -1,16 +1,15 @@
-Comprendido. Aquí tienes la solución del Reto 2: Suma de arreglos invertidos en C#, cumpliendo con las validaciones solicitadas y sin comentarios en el código.
-
-C#
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
 public class SumaArreglosInvertidos
 {
+    private const int LIMITE_INFERIOR = -100;
+    private const int LIMITE_SUPERIOR = 100;
+
     public static void Main(string[] args)
     {
-        Console.WriteLine("--- Reto 2: Suma de arreglos invertidos ---");
+        Console.WriteLine("--- Suma de arreglos invertidos ---");
 
         int n = ObtenerTamanoArreglo();
         
@@ -35,21 +34,25 @@ public class SumaArreglosInvertidos
     public static int ObtenerTamanoArreglo()
     {
         int n;
+        string input;
+
         while (true)
         {
-            Console.Write("Ingresa el tamaño 'n' de los arreglos (máximo 10): ");
-            if (int.TryParse(Console.ReadLine(), out n) && n > 0 && n <= 10)
+            Console.Write("Ingresa el tamano 'n' de los arreglos (maximo 10): ");
+            input = Console.ReadLine();
+            
+            if (int.TryParse(input, out n) && n > 0 && n <= 10)
             {
                 return n;
             }
-            Console.WriteLine("Entrada inválida. Por favor, ingresa un número entero positivo (1-10).");
+            Console.WriteLine("Entrada invalida. Por favor, ingresa un numero entero positivo (1-10).");
         }
     }
 
     public static int[] ObtenerArreglo(string nombre, int n)
     {
         List<int> lista = new List<int>();
-        Console.WriteLine($"\nIngreso de números para el {nombre} ({n} elementos):");
+        Console.WriteLine($"\nIngreso de numeros para el {nombre} ({n} elementos). Rango [{LIMITE_INFERIOR}, {LIMITE_SUPERIOR}]. Evitar duplicados.");
 
         while (lista.Count < n)
         {
@@ -67,24 +70,22 @@ public class SumaArreglosInvertidos
     public static bool ValidarNumero(string input, List<int> listaActual, out int numero)
     {
         numero = 0;
-        const int LIMITE_INFERIOR = -100;
-        const int LIMITE_SUPERIOR = 100;
 
         if (!int.TryParse(input, out numero))
         {
-            Console.WriteLine("Error: Debe ser un número entero válido.");
+            Console.WriteLine("Error: Debe ser un numero entero valido.");
             return false;
         }
 
         if (numero < LIMITE_INFERIOR || numero > LIMITE_SUPERIOR)
         {
-            Console.WriteLine($"Error: El número debe estar en el rango [{LIMITE_INFERIOR}, {LIMITE_SUPERIOR}].");
+            Console.WriteLine($"Error: El numero debe estar en el rango [{LIMITE_INFERIOR}, {LIMITE_SUPERIOR}].");
             return false;
         }
 
         if (listaActual.Contains(numero))
         {
-            Console.WriteLine("Error: El número ya fue ingresado (evitar duplicados).");
+            Console.WriteLine("Error: El numero ya fue ingresado (evitar duplicados).");
             return false;
         }
 
