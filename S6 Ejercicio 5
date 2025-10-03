@@ -1,1 +1,82 @@
+using System;
 
+class Program
+{
+    static void Main()
+    {
+        // Creamos un arreglo para guardar las edades de los 20 pacientes
+        int[] edades = new int[20];
+
+        // Contadores para cada grupo
+        int niños = 0, jovenes = 0, adultos = 0, mayores = 0;
+
+        // Sumas para calcular promedios
+        int sumaGeneral = 0, sumaNiños = 0, sumaJovenes = 0, sumaAdultos = 0, sumaMayores = 0;
+
+        // Ingreso de edades
+        for (int i = 0; i < 20; i++)
+        {
+            int edad;
+            while (true) // validamos que la edad sea positiva
+            {
+                Console.Write("Ingresa la edad del paciente #" + (i + 1) + ": ");
+                if (int.TryParse(Console.ReadLine(), out edad) && edad >= 0)
+                {
+                    break; // válido
+                }
+                else
+                {
+                    Console.WriteLine("Edad inválida. Debe ser un número entero positivo.");
+                }
+            }
+
+            edades[i] = edad;
+            sumaGeneral += edad;
+
+            // Clasificación por grupo
+            if (edad <= 12)
+            {
+                niños++;
+                sumaNiños += edad;
+            }
+            else if (edad <= 25)
+            {
+                jovenes++;
+                sumaJovenes += edad;
+            }
+            else if (edad <= 60)
+            {
+                adultos++;
+                sumaAdultos += edad;
+            }
+            else
+            {
+                mayores++;
+                sumaMayores += edad;
+            }
+        }
+
+        // Resultados
+        Console.WriteLine("\n--- Resultados ---");
+        Console.WriteLine("Niños: " + niños);
+        Console.WriteLine("Jóvenes: " + jovenes);
+        Console.WriteLine("Adultos: " + adultos);
+        Console.WriteLine("Mayores: " + mayores);
+
+        // Alerta si hay más de 5 mayores
+        if (mayores > 5)
+        {
+            Console.WriteLine("ALERTA: Hay más de 5 personas mayores (alto riesgo).");
+        }
+
+        // Promedio general
+        double promedioGeneral = (double)sumaGeneral / 20;
+        Console.WriteLine("\nEdad promedio general: " + promedioGeneral.ToString("F2"));
+
+        // Promedios por grupo (con validación para no dividir por cero)
+        if (niños > 0) Console.WriteLine("Promedio de niños: " + ((double)sumaNiños / niños).ToString("F2"));
+        if (jovenes > 0) Console.WriteLine("Promedio de jóvenes: " + ((double)sumaJovenes / jovenes).ToString("F2"));
+        if (adultos > 0) Console.WriteLine("Promedio de adultos: " + ((double)sumaAdultos / adultos).ToString("F2"));
+        if (mayores > 0) Console.WriteLine("Promedio de mayores: " + ((double)sumaMayores / mayores).ToString("F2"));
+    }
+}
