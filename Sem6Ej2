@@ -1,0 +1,93 @@
+Comprendido. Aquí tienes la solución del Reto 2: Suma de arreglos invertidos en C#, cumpliendo con las validaciones solicitadas y sin comentarios en el código.
+
+C#
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+public class SumaArreglosInvertidos
+{
+    public static void Main(string[] args)
+    {
+        Console.WriteLine("--- Reto 2: Suma de arreglos invertidos ---");
+
+        int n = ObtenerTamanoArreglo();
+        
+        int[] arr1 = ObtenerArreglo("Primer Arreglo (arr1)", n);
+        int[] arr2 = ObtenerArreglo("Segundo Arreglo (arr2)", n);
+
+        int[] resultado = new int[n];
+        int[] arr2Invertido = arr2.Reverse().ToArray();
+
+        for (int i = 0; i < n; i++)
+        {
+            resultado[i] = arr1[i] + arr2Invertido[i];
+        }
+
+        Console.WriteLine("\n--- Resultado de la Suma ---");
+        Console.WriteLine($"Arreglo 1 (arr1):    [{string.Join(", ", arr1)}]");
+        Console.WriteLine($"Arreglo 2 (arr2):    [{string.Join(", ", arr2)}]");
+        Console.WriteLine($"Arreglo 2 Invertido: [{string.Join(", ", arr2Invertido)}]");
+        Console.WriteLine($"Resultado:           [{string.Join(", ", resultado)}]");
+    }
+
+    public static int ObtenerTamanoArreglo()
+    {
+        int n;
+        while (true)
+        {
+            Console.Write("Ingresa el tamaño 'n' de los arreglos (máximo 10): ");
+            if (int.TryParse(Console.ReadLine(), out n) && n > 0 && n <= 10)
+            {
+                return n;
+            }
+            Console.WriteLine("Entrada inválida. Por favor, ingresa un número entero positivo (1-10).");
+        }
+    }
+
+    public static int[] ObtenerArreglo(string nombre, int n)
+    {
+        List<int> lista = new List<int>();
+        Console.WriteLine($"\nIngreso de números para el {nombre} ({n} elementos):");
+
+        while (lista.Count < n)
+        {
+            Console.Write($"Elemento {lista.Count + 1}: ");
+            string input = Console.ReadLine();
+
+            if (ValidarNumero(input, lista, out int numeroValido))
+            {
+                lista.Add(numeroValido);
+            }
+        }
+        return lista.ToArray();
+    }
+
+    public static bool ValidarNumero(string input, List<int> listaActual, out int numero)
+    {
+        numero = 0;
+        const int LIMITE_INFERIOR = -100;
+        const int LIMITE_SUPERIOR = 100;
+
+        if (!int.TryParse(input, out numero))
+        {
+            Console.WriteLine("Error: Debe ser un número entero válido.");
+            return false;
+        }
+
+        if (numero < LIMITE_INFERIOR || numero > LIMITE_SUPERIOR)
+        {
+            Console.WriteLine($"Error: El número debe estar en el rango [{LIMITE_INFERIOR}, {LIMITE_SUPERIOR}].");
+            return false;
+        }
+
+        if (listaActual.Contains(numero))
+        {
+            Console.WriteLine("Error: El número ya fue ingresado (evitar duplicados).");
+            return false;
+        }
+
+        return true;
+    }
+}
