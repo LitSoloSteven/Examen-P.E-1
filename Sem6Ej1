@@ -1,9 +1,3 @@
-This C# solution addresses the challenge by using arrays for the temperatures and a loop for the conversion and statistical calculations.
-
-Here is the C# code, followed by an explanation of the steps and the statistical methods used.
-
-C#
-
 using System;
 using System.Linq;
 
@@ -11,7 +5,6 @@ public class TemperaturaConverter
 {
     public static void Main(string[] args)
     {
-        // Define the size of the array (7 days)
         const int DIAS_SEMANA = 7;
         // Array to store temperatures in Celsius
         double[] temperaturasCelsius = new double[DIAS_SEMANA];
@@ -22,8 +15,6 @@ public class TemperaturaConverter
         for (int i = 0; i < DIAS_SEMANA; i++)
         {
             Console.Write($"Ingresa la temperatura del día {i + 1} (en °C): ");
-            // Error handling for non-numeric input is omitted for simplicity,
-            // but in a production environment, you'd use TryParse.
             if (double.TryParse(Console.ReadLine(), out double temp))
             {
                 temperaturasCelsius[i] = temp;
@@ -35,56 +26,39 @@ public class TemperaturaConverter
             }
         }
 
-        // 2. Creación del Arreglo en Fahrenheit
-        // Array to store temperatures in Fahrenheit
         double[] temperaturasFahrenheit = new double[DIAS_SEMANA];
 
-        // Perform the conversion and store in the new array
         for (int i = 0; i < DIAS_SEMANA; i++)
         {
-            // Formula: F = (C * 9/5) + 32
             temperaturasFahrenheit[i] = (temperaturasCelsius[i] * 9 / 5) + 32;
         }
 
-        // 3. Muestra ambos arreglos en paralelo
         Console.WriteLine("\n--- Temperaturas Registradas y Convertidas ---");
         Console.WriteLine("Día | Celsius (°C) | Fahrenheit (°F)");
         Console.WriteLine("----------------------------------");
         for (int i = 0; i < DIAS_SEMANA; i++)
         {
-            // The Day column is justified to the left (-3), and temperatures 
-            // are formatted with one decimal place (F1)
             Console.WriteLine($" {i + 1,-3} | {temperaturasCelsius[i],12:F1} | {temperaturasFahrenheit[i],14:F1}");
         }
 
         Console.WriteLine("\n--- Cálculo de estadísticas avanzadas ---");
 
-        // 4. Cálculo de estadísticas avanzadas
-
-        // a. Temperatura promedio (Average)
-        // Using the LINQ extension method Average() for simplicity
         double promedioCelsius = temperaturasCelsius.Average();
         double promedioFahrenheit = temperaturasFahrenheit.Average();
         Console.WriteLine($"• Temperatura promedio: {promedioCelsius:F1}°C ({promedioFahrenheit:F1}°F)");
 
-        // b. Día más frío y día más caluroso
-        // Find the min and max temperatures and their index (day)
         double minTemp = temperaturasCelsius.Min();
         double maxTemp = temperaturasCelsius.Max();
 
-        // Get the index of the first occurrence of the min/max value
         int diaMasFrioIndex = Array.IndexOf(temperaturasCelsius, minTemp) + 1; // +1 to get day number
         int diaMasCalurosoIndex = Array.IndexOf(temperaturasCelsius, maxTemp) + 1; // +1 to get day number
 
         Console.WriteLine($"• Día más frío: Día {diaMasFrioIndex} con {minTemp:F1}°C");
         Console.WriteLine($"• Día más caluroso: Día {diaMasCalurosoIndex} con {maxTemp:F1}°C");
 
-        // c. Cuántos días estuvieron por encima de 30 °C
-        // Using the LINQ extension method Count() with a predicate
         int diasSobre30C = temperaturasCelsius.Count(temp => temp > 30.0);
         Console.WriteLine($"• Días por encima de 30 °C: {diasSobre30C}");
 
-        // d. Cuántos días estuvieron bajo cero
         int diasBajoCero = temperaturasCelsius.Count(temp => temp < 0.0);
         Console.WriteLine($"• Días bajo cero: {diasBajoCero}");
     }
