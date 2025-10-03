@@ -7,20 +7,27 @@ public class TemperaturaConverter
     {
         const int DIAS_SEMANA = 7;
         double[] temperaturasCelsius = new double[DIAS_SEMANA];
+        string input;
+        double temp;
 
-        Console.WriteLine("--- Reto 1: Conversor de temperaturas ---");
+        Console.WriteLine("--- Conversor de temperaturas ---");
         
         for (int i = 0; i < DIAS_SEMANA; i++)
         {
-            Console.Write($"Ingresa la temperatura del día {i + 1} (en °C): ");
-            if (double.TryParse(Console.ReadLine(), out double temp))
+            while (true)
             {
-                temperaturasCelsius[i] = temp;
-            }
-            else
-            {
-                Console.WriteLine("Entrada inválida. Asumiendo 0°C.");
-                temperaturasCelsius[i] = 0;
+                Console.Write($"Ingresa la temperatura del dia {i + 1} (en C): ");
+                input = Console.ReadLine();
+                
+                if (double.TryParse(input, out temp))
+                {
+                    temperaturasCelsius[i] = temp;
+                    break;
+                }
+                else
+                {
+                    Console.WriteLine("Entrada invalida. Por favor, ingresa un valor numerico.");
+                }
             }
         }
 
@@ -32,18 +39,18 @@ public class TemperaturaConverter
         }
 
         Console.WriteLine("\n--- Temperaturas Registradas y Convertidas ---");
-        Console.WriteLine("Día | Celsius (°C) | Fahrenheit (°F)");
+        Console.WriteLine("Dia | Celsius (C) | Fahrenheit (F)");
         Console.WriteLine("----------------------------------");
         for (int i = 0; i < DIAS_SEMANA; i++)
         {
             Console.WriteLine($" {i + 1,-3} | {temperaturasCelsius[i],12:F1} | {temperaturasFahrenheit[i],14:F1}");
         }
 
-        Console.WriteLine("\n--- Cálculo de estadísticas avanzadas ---");
+        Console.WriteLine("\n--- Calculo de estadisticas avanzadas ---");
 
         double promedioCelsius = temperaturasCelsius.Average();
         double promedioFahrenheit = temperaturasFahrenheit.Average();
-        Console.WriteLine($"• Temperatura promedio: {promedioCelsius:F1}°C ({promedioFahrenheit:F1}°F)");
+        Console.WriteLine($"• Temperatura promedio: {promedioCelsius:F1}C ({promedioFahrenheit:F1}F)");
 
         double minTemp = temperaturasCelsius.Min();
         double maxTemp = temperaturasCelsius.Max();
@@ -51,13 +58,13 @@ public class TemperaturaConverter
         int diaMasFrioIndex = Array.IndexOf(temperaturasCelsius, minTemp) + 1;
         int diaMasCalurosoIndex = Array.IndexOf(temperaturasCelsius, maxTemp) + 1;
 
-        Console.WriteLine($"• Día más frío: Día {diaMasFrioIndex} con {minTemp:F1}°C");
-        Console.WriteLine($"• Día más caluroso: Día {diaMasCalurosoIndex} con {maxTemp:F1}°C");
+        Console.WriteLine($"• Dia mas frio: Dia {diaMasFrioIndex} con {minTemp:F1}C");
+        Console.WriteLine($"• Dia mas caluroso: Dia {diaMasCalurosoIndex} con {maxTemp:F1}C");
 
-        int diasSobre30C = temperaturasCelsius.Count(temp => temp > 30.0);
-        Console.WriteLine($"• Días por encima de 30 °C: {diasSobre30C}");
+        int diasSobre30C = temperaturasCelsius.Count(t => t > 30.0);
+        Console.WriteLine($"• Dias por encima de 30 C: {diasSobre30C}");
 
-        int diasBajoCero = temperaturasCelsius.Count(temp => temp < 0.0);
-        Console.WriteLine($"• Días bajo cero: {diasBajoCero}");
+        int diasBajoCero = temperaturasCelsius.Count(t => t < 0.0);
+        Console.WriteLine($"• Dias bajo cero: {diasBajoCero}");
     }
 }
