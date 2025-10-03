@@ -1,7 +1,3 @@
-Entendido. Aquí tienes la solución del Reto 3: Intercalar arreglos en C#, sin comentarios.
-
-C#
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +9,7 @@ public class IntercalarArreglos
 
     public static void Main(string[] args)
     {
-        Console.WriteLine("--- Reto 3: Intercalar Arreglos ---");
+        Console.WriteLine("--- Intercalar Arreglos ---");
 
         int n = ObtenerTamanoArreglo();
 
@@ -50,21 +46,25 @@ public class IntercalarArreglos
     public static int ObtenerTamanoArreglo()
     {
         int n;
+        string input;
+
         while (true)
         {
-            Console.Write("Ingresa el tamaño 'n' de los arreglos (máximo 10): ");
-            if (int.TryParse(Console.ReadLine(), out n) && n > 0 && n <= 10)
+            Console.Write("Ingresa el tamano 'n' de los arreglos (maximo 10): ");
+            input = Console.ReadLine();
+
+            if (int.TryParse(input, out n) && n > 0 && n <= 10)
             {
                 return n;
             }
-            Console.WriteLine("Entrada inválida. Por favor, ingresa un número entero positivo (1-10).");
+            Console.WriteLine("Entrada invalida. Por favor, ingresa un numero entero positivo (1-10).");
         }
     }
 
     public static int[] ObtenerArreglo(string nombre, int n)
     {
         int[] arr = new int[n];
-        Console.WriteLine($"\nIngreso de números para el {nombre} ({n} elementos). Rango [{LIMITE_INFERIOR}, {LIMITE_SUPERIOR}]:");
+        Console.WriteLine($"\nIngreso de numeros para el {nombre} ({n} elementos). Rango [{LIMITE_INFERIOR}, {LIMITE_SUPERIOR}]:");
 
         for (int i = 0; i < n; i++)
         {
@@ -89,13 +89,13 @@ public class IntercalarArreglos
 
         if (!int.TryParse(input, out numero))
         {
-            Console.WriteLine("Error: Debe ser un número entero válido.");
+            Console.WriteLine("Error: Debe ser un numero entero valido.");
             return false;
         }
 
         if (numero < LIMITE_INFERIOR || numero > LIMITE_SUPERIOR)
         {
-            Console.WriteLine($"Error: El número debe estar en el rango [{LIMITE_INFERIOR}, {LIMITE_SUPERIOR}].");
+            Console.WriteLine($"Error: El numero debe estar en el rango [{LIMITE_INFERIOR}, {LIMITE_SUPERIOR}].");
             return false;
         }
 
