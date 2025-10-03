@@ -6,12 +6,10 @@ public class TemperaturaConverter
     public static void Main(string[] args)
     {
         const int DIAS_SEMANA = 7;
-        // Array to store temperatures in Celsius
         double[] temperaturasCelsius = new double[DIAS_SEMANA];
 
         Console.WriteLine("--- Reto 1: Conversor de temperaturas ---");
         
-        // 1. Solicitud de Temperaturas
         for (int i = 0; i < DIAS_SEMANA; i++)
         {
             Console.Write($"Ingresa la temperatura del día {i + 1} (en °C): ");
