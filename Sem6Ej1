@@ -48,8 +48,8 @@ public class TemperaturaConverter
         double minTemp = temperaturasCelsius.Min();
         double maxTemp = temperaturasCelsius.Max();
 
-        int diaMasFrioIndex = Array.IndexOf(temperaturasCelsius, minTemp) + 1; // +1 to get day number
-        int diaMasCalurosoIndex = Array.IndexOf(temperaturasCelsius, maxTemp) + 1; // +1 to get day number
+        int diaMasFrioIndex = Array.IndexOf(temperaturasCelsius, minTemp) + 1;
+        int diaMasCalurosoIndex = Array.IndexOf(temperaturasCelsius, maxTemp) + 1;
 
         Console.WriteLine($"• Día más frío: Día {diaMasFrioIndex} con {minTemp:F1}°C");
         Console.WriteLine($"• Día más caluroso: Día {diaMasCalurosoIndex} con {maxTemp:F1}°C");
