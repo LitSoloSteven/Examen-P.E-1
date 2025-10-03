@@ -1,0 +1,104 @@
+Entendido. Aquí tienes la solución del Reto 3: Intercalar arreglos en C#, sin comentarios.
+
+C#
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+public class IntercalarArreglos
+{
+    private const int LIMITE_INFERIOR = 1;
+    private const int LIMITE_SUPERIOR = 100;
+
+    public static void Main(string[] args)
+    {
+        Console.WriteLine("--- Reto 3: Intercalar Arreglos ---");
+
+        int n = ObtenerTamanoArreglo();
+
+        int[] arr1 = ObtenerArreglo("Primer Arreglo (arr1)", n);
+        int[] arr2 = ObtenerArreglo("Segundo Arreglo (arr2)", n);
+
+        int totalElementos = n * 2;
+        int[] resultado = new int[totalElementos];
+        List<string> origenValores = new List<string>();
+
+        for (int i = 0; i < n; i++)
+        {
+            resultado[2 * i] = arr1[i];
+            origenValores.Add("arr1");
+
+            resultado[2 * i + 1] = arr2[i];
+            origenValores.Add("arr2");
+        }
+
+        Console.WriteLine("\n--- Arreglos de Entrada ---");
+        Console.WriteLine($"arr1: [{string.Join(", ", arr1)}]");
+        Console.WriteLine($"arr2: [{string.Join(", ", arr2)}]");
+        
+        Console.WriteLine("\n--- Arreglo Intercalado ---");
+        Console.WriteLine($"Resultado: [{string.Join(", ", resultado)}]");
+
+        Console.WriteLine("\n--- Origen de cada valor ---");
+        for (int i = 0; i < totalElementos; i++)
+        {
+            Console.WriteLine($"{resultado[i]} ({origenValores[i]})");
+        }
+    }
+
+    public static int ObtenerTamanoArreglo()
+    {
+        int n;
+        while (true)
+        {
+            Console.Write("Ingresa el tamaño 'n' de los arreglos (máximo 10): ");
+            if (int.TryParse(Console.ReadLine(), out n) && n > 0 && n <= 10)
+            {
+                return n;
+            }
+            Console.WriteLine("Entrada inválida. Por favor, ingresa un número entero positivo (1-10).");
+        }
+    }
+
+    public static int[] ObtenerArreglo(string nombre, int n)
+    {
+        int[] arr = new int[n];
+        Console.WriteLine($"\nIngreso de números para el {nombre} ({n} elementos). Rango [{LIMITE_INFERIOR}, {LIMITE_SUPERIOR}]:");
+
+        for (int i = 0; i < n; i++)
+        {
+            while (true)
+            {
+                Console.Write($"Elemento {i + 1}: ");
+                string input = Console.ReadLine();
+
+                if (ValidarNumero(input, out int numeroValido))
+                {
+                    arr[i] = numeroValido;
+                    break;
+                }
+            }
+        }
+        return arr;
+    }
+
+    public static bool ValidarNumero(string input, out int numero)
+    {
+        numero = 0;
+
+        if (!int.TryParse(input, out numero))
+        {
+            Console.WriteLine("Error: Debe ser un número entero válido.");
+            return false;
+        }
+
+        if (numero < LIMITE_INFERIOR || numero > LIMITE_SUPERIOR)
+        {
+            Console.WriteLine($"Error: El número debe estar en el rango [{LIMITE_INFERIOR}, {LIMITE_SUPERIOR}].");
+            return false;
+        }
+
+        return true;
+    }
+}
