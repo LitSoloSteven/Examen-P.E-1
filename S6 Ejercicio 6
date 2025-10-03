@@ -1,1 +1,88 @@
+using System;
 
+class Program
+{
+    static void Main()
+    {
+        int totalVotos = 100;
+        int[] votos = new int[totalVotos];
+
+        // Contadores de votos por candidato (índice 0 → candidato 1, índice 4 → candidato 5)
+        int[] contadorCandidatos = new int[5];
+
+        Random rnd = new Random();
+
+        // Generar votos aleatorios entre 1 y 5
+        for (int i = 0; i < totalVotos; i++)
+        {
+            votos[i] = rnd.Next(1, 6); // 1 a 5
+        }
+
+        // Contar los votos por candidato
+        for (int i = 0; i < totalVotos; i++)
+        {
+            int voto = votos[i];
+
+            if (voto >= 1 && voto <= 5) // validamos que sea un voto válido
+            {
+                contadorCandidatos[voto - 1]++;
+            }
+            else
+            {
+                Console.WriteLine("Voto inválido detectado: " + voto);
+            }
+        }
+
+        // Mostrar resultados y porcentajes
+        Console.WriteLine("--- Resultados ---");
+        for (int i = 0; i < 5; i++)
+        {
+            double porcentaje = (double)contadorCandidatos[i] / totalVotos * 100;
+            Console.WriteLine("Candidato " + (i + 1) + ": " + contadorCandidatos[i] 
+                + " votos (" + porcentaje.ToString("F2") + "%)");
+        }
+
+        // Determinar ganador
+        int maxVotos = 0;
+        for (int i = 0; i < 5; i++)
+        {
+            if (contadorCandidatos[i] > maxVotos)
+            {
+                maxVotos = contadorCandidatos[i];
+            }
+        }
+
+        // Revisar si hay empate
+        int numGanadores = 0;
+        for (int i = 0; i < 5; i++)
+        {
+            if (contadorCandidatos[i] == maxVotos)
+            {
+                numGanadores++;
+            }
+        }
+
+        if (numGanadores == 1)
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                if (contadorCandidatos[i] == maxVotos)
+                {
+                    Console.WriteLine("Candidato ganador: Candidato " + (i + 1));
+                }
+            }
+        }
+        else
+        {
+            Console.Write("Empate entre los candidatos: ");
+            for (int i = 0; i < 5; i++)
+            {
+                if (contadorCandidatos[i] == maxVotos)
+                {
+                    Console.Write((i + 1) + " ");
+                }
+            }
+            Console.WriteLine();
+        }
+    }
+}
