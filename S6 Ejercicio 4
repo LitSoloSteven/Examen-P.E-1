@@ -1,0 +1,74 @@
+using System;
+
+class Program
+{
+    static void Main()
+    {
+        int cantidad;
+
+        // Pedimos la cantidad de nombres (validación incluida)
+        do
+        {
+            Console.Write("¿Cuántos nombres quieres ingresar? ");
+            if (!int.TryParse(Console.ReadLine(), out cantidad) || cantidad <= 0)
+            {
+                Console.WriteLine("La cantidad debe ser un número entero, positivo y mayor a cero.");
+                cantidad = 0; // para que siga pidiendo
+            }
+        } while (cantidad <= 0);
+
+        // Creamos los arreglos
+        string[] nombres = new string[cantidad];
+        int[] longitudes = new int[cantidad];
+
+        // Pedimos los nombres
+        for (int i = 0; i < cantidad; i++)
+        {
+            string nombre;
+            do
+            {
+                Console.Write("Ingresa el nombre #" + (i + 1) + ": ");
+                nombre = Console.ReadLine();
+
+                if (!EsValido(nombre))
+                {
+                    Console.WriteLine("Nombre inválido. Debe tener más de 2 letras, sin números ni símbolos.");
+                }
+
+            } while (!EsValido(nombre));
+
+            // Guardamos el nombre y su longitud
+            nombres[i] = nombre;
+            longitudes[i] = nombre.Length;
+        }
+
+        // Mostramos resultados
+        Console.WriteLine("\n--- Resultados ---");
+        for (int i = 0; i < cantidad; i++)
+        {
+            Console.WriteLine("Nombre: " + nombres[i]
+                            + " | Longitud: " + longitudes[i]
+                            + " | Clasificación: " + Clasificar(longitudes[i]));
+        }
+    }
+
+    // Valida que el nombre cumpla las condiciones
+    static bool EsValido(string nombre)
+    {
+        if (string.IsNullOrWhiteSpace(nombre) || nombre.Length < 3) return false;
+
+        foreach (char c in nombre)
+        {
+            if (!char.IsLetter(c)) return false;
+        }
+        return true;
+    }
+
+    // Clasifica el nombre según la longitud
+    static string Clasificar(int longitud)
+    {
+        if (longitud <= 4) return "Corto";
+        if (longitud <= 7) return "Medio";
+        return "Largo";
+    }
+}
