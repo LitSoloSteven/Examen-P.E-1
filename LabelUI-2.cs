@@ -2,41 +2,29 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace LabelEnVSCode
+namespace LabelSimple
 {
     public class VentanaPrincipal : Form
     {
         private Label lblMensaje;
-        private Button btnCambiar;
 
         public VentanaPrincipal()
         {
-            // Configuración de la ventana
-            this.Text = "Ejemplo de Label en VS Code";
-            this.Size = new Size(400, 200);
+            // Configurar la ventana
+            this.Text = "Ejemplo básico de Label";
+            this.Size = new Size(1366, 768);
+            this.StartPosition = FormStartPosition.CenterScreen;
 
-            // Crear Label
+            // Crear el label
             lblMensaje = new Label();
-            lblMensaje.Text = "Hola Crack!";
-            lblMensaje.Location = new Point(50, 40);
-            lblMensaje.Font = new Font("Arial", 14);
+            lblMensaje.Text = "ejemplo de label, lol";
+            lblMensaje.Font = new Font("Arial", 32);
             lblMensaje.ForeColor = Color.DarkBlue;
             lblMensaje.AutoSize = true;
+            lblMensaje.Location = new Point(80, 50);
 
-            // Crear botón
-            btnCambiar = new Button();
-            btnCambiar.Text = "Cambiar texto";
-            btnCambiar.Location = new Point(50, 80);
-            btnCambiar.Click += BtnCambiar_Click;
-
-            // Agregar controles
+            // Agregar el label al formulario
             Controls.Add(lblMensaje);
-            Controls.Add(btnCambiar);
-        }
-
-        private void BtnCambiar_Click(object sender, EventArgs e)
-        {
-            lblMensaje.Text = "¡Texto cambiado desde VS Code!";
         }
 
         [STAThread]
