@@ -1,0 +1,94 @@
+// Importamos las librerías necesarias para usar Windows Forms y otros elementos del sistema
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Reflection.Emit;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace WindowsFormsApp1
+{
+    // La clase Form1 hereda de Form, lo que significa que es una ventana o formulario
+    public partial class Form1 : Form
+    {
+        // aquí se inicializan los elementos y configuraciones del formulario
+        public Form1()
+        {
+            InitializeComponent(); // Inicializa todos los controles visuales (botones, labels, comboBox, etc.)
+
+            // Cambiamos el título de la ventana 
+            this.Text = "Selector de Paises";
+
+            // Establecemos el estilo del ComboBox 
+            comboBox1.DropDownStyle = ComboBoxStyle.DropDownList;
+
+            
+            comboBox1.Items.AddRange(new string[] { "España", "Mexico", "Argentina", "Japon" });
+
+            // Si el ComboBox tiene al menos un elemento, selecciona el primero automáticamente
+            if (comboBox1.Items.Count > 0) comboBox1.SelectedIndex = 0;
+
+            // Asociamos el evento "SelectedIndexChanged" con el método que manejará el cambio de selección
+            comboBox1.SelectedIndexChanged += comboBox1_SelectedIndexChanged;
+        }
+
+        // Este método se ejecuta automáticamente cuando el usuario cambia la selección del ComboBox
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            
+            string paisSeleccionado = comboBox1.SelectedItem?.ToString();
+
+            // Verificamos que la variable no esté vacía ni nula
+            if (!string.IsNullOrEmpty(paisSeleccionado))
+            {
+                // variables para almacenar la descripción
+                string descripcion = "";
+                int opcion = 0;
+
+                
+                if (paisSeleccionado == "España")
+                {
+                    descripcion = "Pais de Europa, Capital Madrid";
+                    opcion = 1;
+                }
+
+                else if (paisSeleccionado == "Mexico")
+                {
+                    descripcion = "Pais de Norteamerica, Capital Ciudad de Mexico";
+                    opcion = 2;
+                }
+
+                else if (paisSeleccionado == "Argentina")
+                {
+                    descripcion = "Pais de Sudamerica, Capital Buenos Aires";
+                    opcion = 3;
+                }
+
+                else if (paisSeleccionado == "Japon")
+                {
+                    descripcion = "Pais de Asia, Capital Tokio";
+                    opcion = 4;
+                }
+
+                // Mostramos la información en los labels del formulario
+                label1.Text = "Pais: " + paisSeleccionado;
+                label2.Text = "Descripcion: " + descripcion;
+                label3.Text = "Opcion: " + opcion;
+
+                
+            }
+            else
+            {
+                
+                label1.Text = "Ninguna seleccion";
+
+                // Este else casi nunca se ejecuta aquí, porque siempre hay un país seleccionado al inicio, es mas como
+                
+            }
+        }
+    }
+}
