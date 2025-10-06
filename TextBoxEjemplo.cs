@@ -1,43 +1,29 @@
 using System.Windows.Forms;
 using System.Drawing;
 
-namespace TextBoxEjemploSimple
+public class MiniForm : Form
 {
-    public class MiFormulario : Form
+    private TextBox t;
+
+    public MiniForm()
     {
-        private TextBox txtDato;
+        this.Text = "Mini Demo";
+        this.Size = new Size(300, 150);
 
-        public MiFormulario()
-        {
-            this.Text = "Ejemplo de TextBox";
-            this.Size = new Size(300, 200);
-
-            txtDato = new TextBox();
-            txtDato.Location = new Point(50, 50);
-            txtDato.Text = "Escribe algo..."; 
-
-            Button btnAccion = new Button();
-            btnAccion.Text = "Leer Texto";
-            btnAccion.Location = new Point(50, 80);
-            
-            btnAccion.Click += new System.EventHandler(this.LeerTexto_Click);
-
-            this.Controls.Add(txtDato);
-            this.Controls.Add(btnAccion);
-        }
-
-        private void LeerTexto_Click(object sender, System.EventArgs e)
-        {
-            // LA LÍNEA CLAVE: Obtenemos el texto del TextBox
-            string textoCapturado = txtDato.Text; 
-            
-            MessageBox.Show("¡Capturamos el texto! Dice: " + textoCapturado, "TextBox Leído");
-        }
+        t = new TextBox { Location = new Point(50, 20), Text = "Escribe aquí" };
+        Button b = new Button { Location = new Point(50, 50), Text = "Mostrar" };
         
-        [System.STAThread]
-        public static void Main()
-        {
-            Application.Run(new MiFormulario());
-        }
+        b.Click += (s, e) => {
+            MessageBox.Show("El texto es: " + t.Text);
+        };
+
+        Controls.Add(t);
+        Controls.Add(b);
+    }
+    
+    [System.STAThread]
+    public static void Main()
+    {
+        Application.Run(new MiniForm());
     }
 }
