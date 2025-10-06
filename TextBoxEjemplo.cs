@@ -1,10 +1,3 @@
-¡Dale! Quitamos todos los comentarios (//) para que el código sea solo lo esencial y ejecutable.
-
-Aquí tienes la versión más limpia y concisa del ejemplo de TextBox en C# usando Windows Forms:
-
-💻 Ejemplo Mínimo de TextBox (Sin Comentarios)
-C#
-
 using System.Windows.Forms;
 using System.Drawing;
 
