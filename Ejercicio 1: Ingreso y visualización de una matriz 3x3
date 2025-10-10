@@ -1,0 +1,113 @@
+using System;
+using System.Drawing;
+using System.Text;
+using System.Windows.Forms;
+
+static class Program
+{
+    [STAThread]
+    static void Main()
+    {
+        // Inicia el formulario
+        Application.EnableVisualStyles();
+        Application.SetCompatibleTextRenderingDefault(false);
+
+        Form form = new Form();
+        form.Text = "Visualización de Matriz 3x3";
+        form.StartPosition = FormStartPosition.CenterScreen;
+        form.ClientSize = new Size(350, 400);
+        form.BackColor = Color.LightBlue; // Color de fondo para hacerlo mas bonityo
+
+        // Matriz de TextBoxes para ingresar valores
+        TextBox[,] matriz = new TextBox[3, 3];
+        int tamaño = 50; // Tamaño de cada celda
+        int posX = 40;
+        int posY = 40;
+
+        // Título de la app
+        Label lblTitulo = new Label();
+        lblTitulo.Text = "Ingresa los números:";
+        lblTitulo.Font = new Font("Arial", 12, FontStyle.Bold);
+        lblTitulo.Location = new Point(80, 10);
+        lblTitulo.AutoSize = true;
+        form.Controls.Add(lblTitulo);
+
+        // Crear la cuadrícula 3x3
+        for (int fila = 0; fila < 3; fila++)
+        {
+            for (int col = 0; col < 3; col++)
+            {
+                TextBox txt = new TextBox();
+                txt.Size = new Size(tamaño, tamaño);
+                txt.Location = new Point(posX + col * (tamaño + 10), posY + fila * (tamaño + 10));
+                txt.TextAlign = HorizontalAlignment.Center;
+                txt.Font = new Font("Consolas", 14, FontStyle.Bold);
+                txt.BackColor = Color.White;
+                txt.ForeColor = Color.DarkBlue;
+
+                // Validación: solo números (positivos o negativos)
+                txt.KeyPress += (sender, e) =>
+                {
+                    if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && e.KeyChar != '-')
+                        e.Handled = true;
+
+                    // Solo se permite un '-' al principio
+                    if (e.KeyChar == '-' && ((TextBox)sender).SelectionStart != 0)
+                        e.Handled = true;
+
+                    // No permitir más de un '-'
+                    if (e.KeyChar == '-' && ((TextBox)sender).Text.Contains("-"))
+                        e.Handled = true;
+                };
+
+                form.Controls.Add(txt);
+                matriz[fila, col] = txt;
+            }
+        }
+
+        // Botón para mostrar la matriz
+        Button btnMostrar = new Button();
+        btnMostrar.Text = "Mostrar matriz";
+        btnMostrar.Size = new Size(150, 35);
+        btnMostrar.Location = new Point((form.ClientSize.Width - btnMostrar.Width) / 2, posY + 3 * (tamaño + 10) + 10);
+        btnMostrar.BackColor = Color.MediumSeaGreen;
+        btnMostrar.ForeColor = Color.White;
+        btnMostrar.Font = new Font("Arial", 10, FontStyle.Bold);
+        form.Controls.Add(btnMostrar);
+
+        // Acción del botón
+        btnMostrar.Click += (s, e) =>
+        {
+            StringBuilder resultado = new StringBuilder();
+            int[,] datos = new int[3, 3];
+
+            for (int fila = 0; fila < 3; fila++)
+            {
+                for (int col = 0; col < 3; col++)
+                {
+                    string texto = matriz[fila, col].Text;
+
+                    // Validar que lo ingresado sea número
+                    if (int.TryParse(texto, out int valor))
+                    {
+                        datos[fila, col] = valor;
+                        resultado.Append(valor.ToString().PadLeft(5)); // Formato tipo tabla
+                    }
+                    else
+                    {
+                        // Si no es válido, mostrar un mensaje
+                        MessageBox.Show($"Por favor escribe un número en la celda ({fila + 1}, {col + 1}).", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
+                }
+                resultado.AppendLine(); // Ir a la siguiente fila
+            }
+
+            // Mostrar resultado en una ventana emergente
+            MessageBox.Show(resultado.ToString(), "Matriz ingresada", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        };
+
+        // Mostrar el formulario
+        Application.Run(form);
+    }
+}
