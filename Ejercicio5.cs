@@ -28,7 +28,7 @@ namespace MatricesApp
         public FrmSumaPares4x4()
         {
             this.Text = "Suma de Elementos Pares (4x4)";
-            this.Size = new Size(400, 350);
+            this.Size = new Size(1366, 768);
             CrearInterfaz();
         }
 
@@ -98,3 +98,4 @@ namespace MatricesApp
         }
     }
 }
+
