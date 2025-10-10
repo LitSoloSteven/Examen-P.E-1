@@ -1,0 +1,143 @@
+using System;
+using System.Drawing;
+using System.Globalization;
+using System.Text;
+using System.Windows.Forms;
+
+static class Program
+{
+    [STAThread]
+    static void Main()
+    {
+        // Iniciar el formulario
+        Application.EnableVisualStyles();
+        Application.SetCompatibleTextRenderingDefault(false);
+
+        Form form = new Form();
+        form.Text = "Promedios por fila y columna (4x3)";
+        form.StartPosition = FormStartPosition.CenterScreen;
+        form.ClientSize = new Size(400, 460);
+        form.BackColor = Color.Beige;
+
+        // Título del formulario
+        Label lblTitulo = new Label();
+        lblTitulo.Text = "Ingresa calificaciones decimales (0.0 a 100.0)";
+        lblTitulo.Font = new Font("Arial", 11, FontStyle.Bold);
+        lblTitulo.Location = new Point(55, 10);
+        lblTitulo.AutoSize = true;
+        form.Controls.Add(lblTitulo);
+
+        // Crear la matriz de TextBoxes
+        TextBox[,] matriz = new TextBox[4, 3];
+        int tamaño = 50;
+        int posX = 50;
+        int posY = 50;
+
+        for (int fila = 0; fila < 4; fila++)
+        {
+            for (int col = 0; col < 3; col++)
+            {
+                TextBox txt = new TextBox();
+                txt.Size = new Size(tamaño, tamaño);
+                txt.Location = new Point(posX + col * (tamaño + 10), posY + fila * (tamaño + 10));
+                txt.TextAlign = HorizontalAlignment.Center;
+                txt.Font = new Font("Consolas", 12, FontStyle.Bold);
+                txt.BackColor = Color.White;
+                txt.ForeColor = Color.DarkSlateBlue;
+
+                // Validación para decimales (solo números, una coma o punto)
+                txt.KeyPress += (sender, e) =>
+                {
+                    char separadorDecimal = Convert.ToChar(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator);
+
+                    // Permitir números, retroceso, y el separador decimal
+                    if (!char.IsControl(e.KeyChar) &&
+                        !char.IsDigit(e.KeyChar) &&
+                        e.KeyChar != separadorDecimal)
+                    {
+                        e.Handled = true;
+                    }
+
+                    // Solo permitir un separador decimal por celda
+                    if (e.KeyChar == separadorDecimal && ((TextBox)sender).Text.Contains(separadorDecimal))
+                    {
+                        e.Handled = true;
+                    }
+                };
+
+                form.Controls.Add(txt);
+                matriz[fila, col] = txt;
+            }
+        }
+
+        // Botón para calcular promedios
+        Button btnPromedios = new Button();
+        btnPromedios.Text = "Calcular promedios";
+        btnPromedios.Size = new Size(180, 35);
+        btnPromedios.Location = new Point((form.ClientSize.Width - btnPromedios.Width) / 2, posY + 4 * (tamaño + 10) + 10);
+        btnPromedios.BackColor = Color.SteelBlue;
+        btnPromedios.ForeColor = Color.White;
+        btnPromedios.Font = new Font("Arial", 10, FontStyle.Bold);
+        form.Controls.Add(btnPromedios);
+
+        // Acción al hacer clic en el botón
+        btnPromedios.Click += (s, e) =>
+        {
+            double[] sumaFilas = new double[4];
+            double[] sumaColumnas = new double[3];
+            double[,] datos = new double[4, 3];
+
+            // Leer cada celda de la matriz
+            for (int fila = 0; fila < 4; fila++)
+            {
+                for (int col = 0; col < 3; col++)
+                {
+                    string texto = matriz[fila, col].Text;
+
+                    // Usar TryParse para decimales (double)
+                    if (double.TryParse(texto, out double valor))
+                    {
+                        if (valor < 0 || valor > 100)
+                        {
+                            MessageBox.Show($"La calificación en la celda ({fila + 1}, {col + 1}) debe estar entre 0 y 100.");
+                            return;
+                        }
+
+                        datos[fila, col] = valor;
+                        sumaFilas[fila] += valor;
+                        sumaColumnas[col] += valor;
+                    }
+                    else
+                    {
+                        MessageBox.Show($"Por favor ingresa un número válido en la celda ({fila + 1}, {col + 1}).");
+                        return;
+                    }
+                }
+            }
+
+            // Mostrar los promedios
+            StringBuilder resultado = new StringBuilder();
+            resultado.AppendLine("Promedios por fila:");
+
+            for (int i = 0; i < 4; i++)
+            {
+                double promedioFila = sumaFilas[i] / 3;
+                resultado.AppendLine($"Fila {i + 1}: {promedioFila:F2}");
+            }
+
+            resultado.AppendLine();
+            resultado.AppendLine("Promedios por columna:");
+
+            for (int j = 0; j < 3; j++)
+            {
+                double promedioCol = sumaColumnas[j] / 4;
+                resultado.AppendLine($"Columna {j + 1}: {promedioCol:F2}");
+            }
+
+            MessageBox.Show(resultado.ToString(), "Resultados", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        };
+
+        // Ejecutar la aplicación
+        Application.Run(form);
+    }
+}
