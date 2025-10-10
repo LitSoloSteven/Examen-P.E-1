@@ -1,0 +1,109 @@
+using System;
+using System.Globalization;
+using System.Linq;
+using System.Windows.Forms;
+
+static class Program
+{
+    // Crear un TextBox con validación decimal
+    static TextBox CrearCajaTexto(int x, int y)
+    {
+        TextBox txt = new TextBox();
+        txt.Size = new System.Drawing.Size(50, 30);
+        txt.Location = new System.Drawing.Point(x, y);
+        txt.TextAlign = HorizontalAlignment.Center;
+
+        // Validar que solo se escriban números o decimal
+        txt.KeyPress += (s, e) =>
+        {
+            char sep = Convert.ToChar(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator);
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && e.KeyChar != sep)
+                e.Handled = true;
+            if (e.KeyChar == sep && txt.Text.Contains(sep))
+                e.Handled = true;
+        };
+
+        return txt;
+    }
+
+    // Verifica si un texto es decimal válido
+    static bool EsDecimalValido(string texto, out double valor)
+    {
+        return double.TryParse(texto, out valor);
+    }
+
+    [STAThread]
+    static void Main()
+    {
+        Application.EnableVisualStyles();
+        Application.SetCompatibleTextRenderingDefault(false);
+
+        // Crear formulario
+        Form form = new Form();
+        form.Text = "Ordenar matriz 3x3";
+        form.StartPosition = FormStartPosition.CenterScreen;
+        form.ClientSize = new System.Drawing.Size(380, 420);
+
+        // Etiqueta con instrucciones
+        Label lblInfo = new Label();
+        lblInfo.Text = "Ingresa números decimales en la matriz 3x3:";
+        lblInfo.Location = new System.Drawing.Point(40, 10);
+        lblInfo.AutoSize = true;
+        form.Controls.Add(lblInfo);
+
+        // Crear matriz de TextBox
+        TextBox[,] matriz = new TextBox[3, 3];
+        int startX = 70, startY = 40;
+
+        for (int fila = 0; fila < 3; fila++)
+            for (int col = 0; col < 3; col++)
+            {
+                int x = startX + col * 60;
+                int y = startY + fila * 60;
+                matriz[fila, col] = CrearCajaTexto(x, y);
+                form.Controls.Add(matriz[fila, col]);
+            }
+
+        // Botón para ordenar
+        Button btnOrdenar = new Button();
+        btnOrdenar.Text = "Ordenar matriz";
+        btnOrdenar.Size = new System.Drawing.Size(150, 30);
+        btnOrdenar.Location = new System.Drawing.Point((form.ClientSize.Width - 150) / 2, 260);
+        form.Controls.Add(btnOrdenar);
+
+        // Acción al hacer clic en ordenar
+        btnOrdenar.Click += (s, e) =>
+        {
+            double[] valores = new double[9]; // Arreglo para guardar todos los valores
+
+            // Validar y leer todos los números de la matriz
+            int idx = 0;
+            for (int fila = 0; fila < 3; fila++)
+            {
+                for (int col = 0; col < 3; col++)
+                {
+                    string texto = matriz[fila, col].Text;
+                    if (!EsDecimalValido(texto, out double valor))
+                    {
+                        MessageBox.Show($"Número inválido en la celda ({fila + 1}, {col + 1}).");
+                        return;
+                    }
+                    valores[idx++] = valor;
+                }
+            }
+
+            // Ordenar los valores de menor a mayor
+            Array.Sort(valores);
+
+            // Volver a llenar la matriz con los valores ordenados
+            idx = 0;
+            for (int fila = 0; fila < 3; fila++)
+                for (int col = 0; col < 3; col++)
+                    matriz[fila, col].Text = valores[idx++].ToString();
+
+            MessageBox.Show("Matriz ordenada correctamente.");
+        };
+
+        Application.Run(form);
+    }
+}
