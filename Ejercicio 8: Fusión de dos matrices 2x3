@@ -1,0 +1,124 @@
+using System;
+using System.Globalization;
+using System.Windows.Forms;
+
+static class Program
+{
+    // Crear un TextBox con validación decimal, incluyendo negativos
+    static TextBox CrearCajaTexto(int x, int y)
+    {
+        TextBox txt = new TextBox();
+        txt.Size = new System.Drawing.Size(50, 30);
+        txt.Location = new System.Drawing.Point(x, y);
+        txt.TextAlign = HorizontalAlignment.Center;
+
+        txt.KeyPress += (s, e) =>
+        {
+            char sep = Convert.ToChar(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator);
+            // Permitir control, dígitos, separador decimal y signo negativo solo al inicio
+            if (!char.IsControl(e.KeyChar) &&
+                !char.IsDigit(e.KeyChar) &&
+                e.KeyChar != sep &&
+                e.KeyChar != '-')
+            {
+                e.Handled = true;
+                return;
+            }
+
+            // Solo un separador decimal
+            if (e.KeyChar == sep && txt.Text.Contains(sep))
+            {
+                e.Handled = true;
+                return;
+            }
+
+            // Signo negativo solo al principio y una vez
+            if (e.KeyChar == '-')
+            {
+                if (txt.SelectionStart != 0 || txt.Text.Contains("-"))
+                {
+                    e.Handled = true;
+                    return;
+                }
+            }
+        };
+
+        return txt;
+    }
+
+    static bool EsDecimalValido(string texto, out double valor)
+    {
+        return double.TryParse(texto, out valor);
+    }
+
+    [STAThread]
+    static void Main()
+    {
+        Application.EnableVisualStyles();
+        Application.SetCompatibleTextRenderingDefault(false);
+
+        Form form = new Form();
+        form.Text = "Suma de dos matrices 2x3 (con negativos)";
+        form.StartPosition = FormStartPosition.CenterScreen;
+        form.ClientSize = new System.Drawing.Size(460, 350);
+
+        Label lblM1 = new Label() { Text = "Matriz 1", Location = new System.Drawing.Point(70, 10), AutoSize = true };
+        Label lblM2 = new Label() { Text = "Matriz 2", Location = new System.Drawing.Point(270, 10), AutoSize = true };
+        Label lblRes = new Label() { Text = "Resultado", Location = new System.Drawing.Point(170, 220), AutoSize = true };
+
+        form.Controls.Add(lblM1);
+        form.Controls.Add(lblM2);
+        form.Controls.Add(lblRes);
+
+        TextBox[,] matriz1 = new TextBox[2, 3];
+        TextBox[,] matriz2 = new TextBox[2, 3];
+        TextBox[,] matrizRes = new TextBox[2, 3];
+
+        int startY = 40;
+
+        for (int fila = 0; fila < 2; fila++)
+            for (int col = 0; col < 3; col++)
+            {
+                matriz1[fila, col] = CrearCajaTexto(50 + col * 60, startY + fila * 50);
+                matriz2[fila, col] = CrearCajaTexto(250 + col * 60, startY + fila * 50);
+                matrizRes[fila, col] = CrearCajaTexto(150 + col * 60, 250 + fila * 50);
+                matrizRes[fila, col].ReadOnly = true;
+
+                form.Controls.Add(matriz1[fila, col]);
+                form.Controls.Add(matriz2[fila, col]);
+                form.Controls.Add(matrizRes[fila, col]);
+            }
+
+        Button btnSumar = new Button()
+        {
+            Text = "Sumar matrices",
+            Size = new System.Drawing.Size(150, 30),
+            Location = new System.Drawing.Point((form.ClientSize.Width - 150) / 2, 320)
+        };
+        form.Controls.Add(btnSumar);
+
+        btnSumar.Click += (s, e) =>
+        {
+            for (int fila = 0; fila < 2; fila++)
+            {
+                for (int col = 0; col < 3; col++)
+                {
+                    if (!EsDecimalValido(matriz1[fila, col].Text, out double val1))
+                    {
+                        MessageBox.Show($"Número inválido en Matriz 1, fila {fila + 1}, columna {col + 1}.");
+                        return;
+                    }
+                    if (!EsDecimalValido(matriz2[fila, col].Text, out double val2))
+                    {
+                        MessageBox.Show($"Número inválido en Matriz 2, fila {fila + 1}, columna {col + 1}.");
+                        return;
+                    }
+                    matrizRes[fila, col].Text = (val1 + val2).ToString();
+                }
+            }
+            MessageBox.Show("Matrices sumadas correctamente.");
+        };
+
+        Application.Run(form);
+    }
+}
