@@ -10,18 +10,17 @@ static class Program
         Application.EnableVisualStyles();
         Application.SetCompatibleTextRenderingDefault(false);
 
-        // Crear formulario principal
         Form form = new Form();
-        form.Text = "Contador de ocurrencias en una matriz 5x5";
+        form.Text = "Contador de ocurrencias en matriz 5x5";
         form.StartPosition = FormStartPosition.CenterScreen;
-        form.ClientSize = new Size(400, 500);
+        form.ClientSize = new Size(400, 450);
 
-        // Crear matriz de TextBoxes (5x5)
         TextBox[,] matriz = new TextBox[5, 5];
         int cellSize = 50;
         int startX = 20;
         int startY = 20;
 
+        // Crear matriz 5x5
         for (int fila = 0; fila < 5; fila++)
         {
             for (int col = 0; col < 5; col++)
@@ -30,41 +29,60 @@ static class Program
                 txt.Size = new Size(cellSize, cellSize);
                 txt.Location = new Point(startX + col * (cellSize + 5), startY + fila * (cellSize + 5));
                 txt.TextAlign = HorizontalAlignment.Center;
+
+                // Validación: solo números
+                txt.KeyPress += (sender, e) =>
+                {
+                    if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && e.KeyChar != '-')
+                        e.Handled = true;
+                    if (e.KeyChar == '-' && ((TextBox)sender).SelectionStart != 0)
+                        e.Handled = true;
+                    if (e.KeyChar == '-' && ((TextBox)sender).Text.Contains("-"))
+                        e.Handled = true;
+                };
+
                 form.Controls.Add(txt);
                 matriz[fila, col] = txt;
             }
         }
 
-        // Etiqueta y TextBox para ingresar número a buscar
-        Label lblBuscar = new Label();
-        lblBuscar.Text = "Número a buscar:";
-        lblBuscar.Location = new Point(20, startY + 5 * (cellSize + 5) + 20);
-        lblBuscar.AutoSize = true;
-        form.Controls.Add(lblBuscar);
+        // Label y TextBox para número a buscar
+        Label lblNumero = new Label();
+        lblNumero.Text = "Número a buscar:";
+        lblNumero.Location = new Point(startX, startY + 5 * (cellSize + 5) + 10);
+        lblNumero.AutoSize = true;
+        form.Controls.Add(lblNumero);
 
-        TextBox txtBuscar = new TextBox();
-        txtBuscar.Size = new Size(100, 30);
-        txtBuscar.Location = new Point(140, lblBuscar.Top - 3);
-        form.Controls.Add(txtBuscar);
+        TextBox txtNumeroBuscar = new TextBox();
+        txtNumeroBuscar.Size = new Size(100, 25);
+        txtNumeroBuscar.Location = new Point(startX + 110, startY + 5 * (cellSize + 5) + 7);
+        txtNumeroBuscar.TextAlign = HorizontalAlignment.Center;
+
+        // Validación para el número a buscar
+        txtNumeroBuscar.KeyPress += (sender, e) =>
+        {
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && e.KeyChar != '-')
+                e.Handled = true;
+            if (e.KeyChar == '-' && ((TextBox)sender).SelectionStart != 0)
+                e.Handled = true;
+            if (e.KeyChar == '-' && ((TextBox)sender).Text.Contains("-"))
+                e.Handled = true;
+        };
+
+        form.Controls.Add(txtNumeroBuscar);
 
         // Botón para contar ocurrencias
         Button btnContar = new Button();
-        btnContar.Text = "Contar";
-        btnContar.Size = new Size(100, 30);
-        btnContar.Location = new Point(260, lblBuscar.Top - 5);
+        btnContar.Text = "Contar ocurrencias";
+        btnContar.Size = new Size(150, 30);
+        btnContar.Location = new Point((form.ClientSize.Width - btnContar.Width) / 2, startY + 5 * (cellSize + 5) + 50);
         form.Controls.Add(btnContar);
 
-        // Evento del botón
         btnContar.Click += (s, e) =>
         {
-            if (!int.TryParse(txtBuscar.Text, out int numeroBuscar))
-            {
-                MessageBox.Show("Por favor ingresa un número válido a buscar.");
-                return;
-            }
+            int[,] matrizNumeros = new int[5, 5];
 
-            int contador = 0;
-
+            // Leer la matriz
             for (int fila = 0; fila < 5; fila++)
             {
                 for (int col = 0; col < 5; col++)
@@ -72,15 +90,32 @@ static class Program
                     string texto = matriz[fila, col].Text;
                     if (int.TryParse(texto, out int valor))
                     {
-                        if (valor == numeroBuscar)
-                        {
-                            contador++;
-                        }
+                        matrizNumeros[fila, col] = valor;
                     }
                     else
                     {
-                        MessageBox.Show($"Hay un valor no válido en la celda ({fila + 1}, {col + 1}).");
+                        MessageBox.Show($"Valor inválido en la celda ({fila + 1}, {col + 1}). Solo números permitidos.");
                         return;
+                    }
+                }
+            }
+
+            // Leer número a buscar
+            if (!int.TryParse(txtNumeroBuscar.Text, out int numeroBuscar))
+            {
+                MessageBox.Show("Ingrese un número válido para buscar.");
+                return;
+            }
+
+            // Contar ocurrencias
+            int contador = 0;
+            for (int fila = 0; fila < 5; fila++)
+            {
+                for (int col = 0; col < 5; col++)
+                {
+                    if (matrizNumeros[fila, col] == numeroBuscar)
+                    {
+                        contador++;
                     }
                 }
             }
@@ -88,7 +123,6 @@ static class Program
             MessageBox.Show($"El número {numeroBuscar} aparece {contador} veces en la matriz.", "Resultado");
         };
 
-        // Ejecutar la aplicación
         Application.Run(form);
     }
 }
