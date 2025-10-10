@@ -1,0 +1,134 @@
+using System;
+using System.Drawing;
+using System.Windows.Forms;
+
+static class Program
+{
+    [STAThread]
+    static void Main()
+    {
+        Application.EnableVisualStyles();
+        Application.SetCompatibleTextRenderingDefault(false);
+
+        // Crear formulario
+        Form form = new Form();
+        form.Text = "Transposición de Matriz 3x3";
+        form.StartPosition = FormStartPosition.CenterScreen;
+        form.ClientSize = new Size(300, 400);
+
+        // Crear matriz original y transpuesta
+        TextBox[,] matrizOriginal = new TextBox[3, 3];
+        TextBox[,] matrizTranspuesta = new TextBox[3, 3];
+        int cellSize = 50;
+        int startX = 30;
+        int startY = 30;
+
+        // Etiqueta matriz original
+        Label lblOriginal = new Label();
+        lblOriginal.Text = "Matriz original:";
+        lblOriginal.Location = new Point(startX, startY - 20);
+        form.Controls.Add(lblOriginal);
+
+        // Crear TextBoxes para matriz original con validación
+        for (int fila = 0; fila < 3; fila++)
+        {
+            for (int col = 0; col < 3; col++)
+            {
+                TextBox txt = new TextBox();
+                txt.Size = new Size(cellSize, cellSize);
+                txt.Location = new Point(startX + col * (cellSize + 5), startY + fila * (cellSize + 5));
+                txt.TextAlign = HorizontalAlignment.Center;
+
+                // Validación para que solo se escriban números
+                txt.KeyPress += (sender, e) =>
+                {
+                    // Permitir: teclas de control (backspace), dígitos y un solo signo negativo
+                    if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && e.KeyChar != '-')
+                    {
+                        e.Handled = true;
+                    }
+
+                    // Solo permitir un '-' al inicio
+                    if (e.KeyChar == '-' && ((TextBox)sender).SelectionStart != 0)
+                    {
+                        e.Handled = true;
+                    }
+
+                    // No permitir más de un '-' en el texto
+                    if (e.KeyChar == '-' && ((TextBox)sender).Text.Contains("-"))
+                    {
+                        e.Handled = true;
+                    }
+                };
+
+                form.Controls.Add(txt);
+                matrizOriginal[fila, col] = txt;
+            }
+        }
+
+        // Botón para mostrar transpuesta
+        Button btnTransponer = new Button();
+        btnTransponer.Text = "Mostrar transpuesta";
+        btnTransponer.Size = new Size(160, 30);
+        btnTransponer.Location = new Point((form.ClientSize.Width - btnTransponer.Width) / 2, startY + 3 * (cellSize + 5) + 10);
+        form.Controls.Add(btnTransponer);
+
+        // Etiqueta matriz transpuesta
+        Label lblTranspuesta = new Label();
+        lblTranspuesta.Text = "Matriz transpuesta:";
+        lblTranspuesta.Location = new Point(startX, btnTransponer.Bottom + 15);
+        form.Controls.Add(lblTranspuesta);
+
+        // Crear TextBoxes para matriz transpuesta (solo lectura)
+        for (int fila = 0; fila < 3; fila++)
+        {
+            for (int col = 0; col < 3; col++)
+            {
+                TextBox txt = new TextBox();
+                txt.Size = new Size(cellSize, cellSize);
+                txt.Location = new Point(startX + col * (cellSize + 5), lblTranspuesta.Bottom + 10 + fila * (cellSize + 5));
+                txt.TextAlign = HorizontalAlignment.Center;
+                txt.ReadOnly = true;
+                txt.BackColor = Color.LightGray;
+
+                form.Controls.Add(txt);
+                matrizTranspuesta[fila, col] = txt;
+            }
+        }
+
+        // Evento del botón
+        btnTransponer.Click += (s, e) =>
+        {
+            int[,] matrizNumeros = new int[3, 3];
+
+            // Leer valores
+            for (int fila = 0; fila < 3; fila++)
+            {
+                for (int col = 0; col < 3; col++)
+                {
+                    string texto = matrizOriginal[fila, col].Text;
+                    if (int.TryParse(texto, out int valor))
+                    {
+                        matrizNumeros[fila, col] = valor;
+                    }
+                    else
+                    {
+                        MessageBox.Show($"Valor inválido en la celda ({fila + 1}, {col + 1}). Solo se permiten números.");
+                        return;
+                    }
+                }
+            }
+
+            // Mostrar transpuesta
+            for (int fila = 0; fila < 3; fila++)
+            {
+                for (int col = 0; col < 3; col++)
+                {
+                    matrizTranspuesta[col, fila].Text = matrizNumeros[fila, col].ToString();
+                }
+            }
+        };
+
+        Application.Run(form);
+    }
+}
