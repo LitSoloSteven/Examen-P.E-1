@@ -1,0 +1,80 @@
+using System;
+using System.Drawing;
+using System.Windows.Forms;
+
+static class Program
+{
+    [STAThread]
+    static void Main()
+    {
+        Application.EnableVisualStyles();
+        Application.SetCompatibleTextRenderingDefault(false);
+
+        // Crear formulario
+        Form form = new Form();
+        form.Text = "Suma de matriz 4x4";
+        form.StartPosition = FormStartPosition.CenterScreen;
+        form.ClientSize = new Size(300, 350);
+
+        // Crear matriz 4x4 de TextBoxes
+        TextBox[,] matriz = new TextBox[4, 4];
+        int cellSize = 50;
+        int startX = 20;
+        int startY = 20;
+
+        Random rnd = new Random();
+
+        for (int fila = 0; fila < 4; fila++)
+        {
+            for (int col = 0; col < 4; col++)
+            {
+                TextBox txt = new TextBox();
+                txt.Size = new Size(cellSize, cellSize);
+                txt.Location = new Point(startX + col * (cellSize + 5), startY + fila * (cellSize + 5));
+                txt.TextAlign = HorizontalAlignment.Center;
+
+                // Asignar número aleatorio entre 1 y 100
+                int valor = rnd.Next(1, 101);
+                txt.Text = valor.ToString();
+                txt.ReadOnly = true; // Para que no se modifique
+
+                form.Controls.Add(txt);
+                matriz[fila, col] = txt;
+            }
+        }
+
+        // Botón para calcular suma
+        Button btnSumar = new Button();
+        btnSumar.Text = "Sumar matriz";
+        btnSumar.Size = new Size(120, 30);
+        btnSumar.Location = new Point((form.ClientSize.Width - btnSumar.Width) / 2, startY + 4 * (cellSize + 5) + 20);
+        form.Controls.Add(btnSumar);
+
+        // Evento del botón
+        btnSumar.Click += (s, e) =>
+        {
+            int suma = 0;
+
+            for (int fila = 0; fila < 4; fila++)
+            {
+                for (int col = 0; col < 4; col++)
+                {
+                    if (int.TryParse(matriz[fila, col].Text, out int valor))
+                    {
+                        suma += valor;
+                    }
+                    else
+                    {
+                        MessageBox.Show($"Valor no válido en la celda ({fila + 1}, {col + 1}).");
+                        return;
+                    }
+                }
+            }
+
+            MessageBox.Show($"La suma total de la matriz es: {suma}", "Resultado");
+        };
+
+        // Ejecutar la aplicación
+        Application.Run(form);
+    }
+}
