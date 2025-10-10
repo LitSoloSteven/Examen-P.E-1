@@ -11,18 +11,17 @@ static class Program
         Application.EnableVisualStyles();
         Application.SetCompatibleTextRenderingDefault(false);
 
-        // Crear el formulario
         Form form = new Form();
-        form.Text = "Suma por fila y columna (3x3)";
+        form.Text = "Suma por filas y columnas (3x3)";
         form.StartPosition = FormStartPosition.CenterScreen;
-        form.ClientSize = new Size(300, 300);
+        form.ClientSize = new Size(300, 370);
 
-        // Crear matriz 3x3 de TextBoxes
         TextBox[,] matriz = new TextBox[3, 3];
         int cellSize = 50;
-        int startX = 30;
-        int startY = 30;
+        int startX = 20;
+        int startY = 20;
 
+        // Crear matriz 3x3 con validación
         for (int fila = 0; fila < 3; fila++)
         {
             for (int col = 0; col < 3; col++)
@@ -32,20 +31,29 @@ static class Program
                 txt.Location = new Point(startX + col * (cellSize + 5), startY + fila * (cellSize + 5));
                 txt.TextAlign = HorizontalAlignment.Center;
 
+                // Validación: solo números
+                txt.KeyPress += (sender, e) =>
+                {
+                    if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && e.KeyChar != '-')
+                        e.Handled = true;
+                    if (e.KeyChar == '-' && ((TextBox)sender).SelectionStart != 0)
+                        e.Handled = true;
+                    if (e.KeyChar == '-' && ((TextBox)sender).Text.Contains("-"))
+                        e.Handled = true;
+                };
+
                 form.Controls.Add(txt);
                 matriz[fila, col] = txt;
             }
         }
 
-        // Botón para calcular sumas
-        Button btnSumar = new Button();
-        btnSumar.Text = "Calcular sumas";
-        btnSumar.Size = new Size(150, 30);
-        btnSumar.Location = new Point((form.ClientSize.Width - btnSumar.Width) / 2, startY + 3 * (cellSize + 5) + 20);
-        form.Controls.Add(btnSumar);
+        Button btnCalcular = new Button();
+        btnCalcular.Text = "Calcular sumas";
+        btnCalcular.Size = new Size(150, 30);
+        btnCalcular.Location = new Point((form.ClientSize.Width - btnCalcular.Width) / 2, startY + 3 * (cellSize + 5) + 20);
+        form.Controls.Add(btnCalcular);
 
-        // Evento del botón
-        btnSumar.Click += (s, e) =>
+        btnCalcular.Click += (s, e) =>
         {
             int[] sumaFilas = new int[3];
             int[] sumaColumnas = new int[3];
@@ -62,26 +70,20 @@ static class Program
                     }
                     else
                     {
-                        MessageBox.Show($"Valor inválido en la celda ({fila + 1}, {col + 1}).");
+                        MessageBox.Show($"Valor inválido en la celda ({fila + 1}, {col + 1}). Solo números permitidos.");
                         return;
                     }
                 }
             }
 
-            // Mostrar resultados
             StringBuilder resultado = new StringBuilder();
             for (int i = 0; i < 3; i++)
-            {
-                resultado.AppendLine($"Suma de fila {i + 1}: {sumaFilas[i]}");
-            }
-
+                resultado.AppendLine($"Suma fila {i + 1}: {sumaFilas[i]}");
             resultado.AppendLine();
             for (int j = 0; j < 3; j++)
-            {
-                resultado.AppendLine($"Suma de columna {j + 1}: {sumaColumnas[j]}");
-            }
+                resultado.AppendLine($"Suma columna {j + 1}: {sumaColumnas[j]}");
 
-            MessageBox.Show(resultado.ToString(), "Resultado de sumas");
+            MessageBox.Show(resultado.ToString(), "Resultado");
         };
 
         Application.Run(form);
